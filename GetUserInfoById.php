@@ -9,14 +9,14 @@ if($conn->connect_error)
 	die("Connection failed: " . $conn->connect_error);
 }
 
-if($_REQUEST["username"])
+if($_REQUEST["userId"])
 {
 
-$sql = "SELECT ROW_NUMBER() OVER(ORDER BY score DESC) row_num, id, score, kills, deaths FROM users WHERE username = ?";
+$sql = "SELECT ROW_NUMBER() OVER(ORDER BY score DESC) row_num, username, id, score, kills, deaths, email, currence, password, level FROM users WHERE id = ?";
 //$result = $conn->query($sql);
 
     $statement = $conn->prepare($sql);
-    $statement->bind_param("s", $_REQUEST["username"]);
+    $statement->bind_param("s", $_REQUEST["userId"]);
     $statement->execute();
     $result = $statement->get_result();
 if(!empty($result) && $result->num_rows > 0)
@@ -51,7 +51,7 @@ if(!empty($result) && $result->num_rows > 0)
 		else if($row["score"] >= 3200 && $row["row_num"] <= 100)
 			$rank = "GRANDMASTER";
 
-		echo  $rank . "<br>" . "ID: " .$row["id"]."<br>" . "SCORE: " . $row["score"] .  "<br>" . "K/D: " . round($kd, 2) . "<br>";
+		echo  $row["username"] . "|" . $rank . "|" .$row["id"]."|" .  $row["score"] .  "|" .  round($kd, 2) . "|" .  $row["email"]. "|" .  $row["password"]. "|" .  $row["currence"]. "|" .  $row["level"]. "|";
 	} 
 } 
 else
